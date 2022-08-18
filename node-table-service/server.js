@@ -121,12 +121,12 @@ class Storage {
   }
   addPerson(person) {
     if (typeof person === 'object' && person !== null) {
-      const generateId = Math.random() + Date.now();
-      this.data.unshift({
-        person,
-        id: Math.random() + Date.now()
-      });
-      return generateId;
+      const newPerson = {
+        ...person,
+        id: Math.floor(Math.random() * 10000)+Date.now(),
+      }
+      this.data.unshift(newPerson);
+      return newPerson;
     } else {
       return false;
     }
@@ -152,10 +152,7 @@ class Storage {
       return false;
     }
     this.data[index] = newData;
-    return {
-      index,
-      updatedData: newData,
-    };
+    return newData;
   }
 
   deletePersonById(_personId) {
@@ -210,7 +207,7 @@ app.delete("/deletePerson/:id", (req, res) => {
   const id = req.params.id;
   const result = storage.deletePersonById(id);
   if (result) {
-    res.send(`Person ${result[0].name} has been deleted`)
+    res.send({message: `Person ${result[0].name} has been deleted`})
   } else {
     res.status(400).json({message: 'Person with such id doesn\'t exist'})
   }
