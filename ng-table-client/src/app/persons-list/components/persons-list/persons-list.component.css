@@ -1,0 +1,121 @@
+.persons-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0 10%;
+  margin: 0 auto;
+  margin-top: 10px;
+}
+.persons-list-heading {
+  font-size: 30px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.persons-list-table-wrapper {
+  overflow: hidden;
+  border-radius: 10px;
+}
+.persons-list-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.persons-list-table thead {
+  background-color: #7CC6FE;
+}
+.persons-list-table thead tr th {
+  font-size: 18px;
+  font-weight: 600;
+  padding: 10px;
+  border: 1px solid #F4FAFF;
+}
+.persons-list-table tbody tr td {
+  font-size: 18px;
+  font-weight: normal;
+  background-color: #EBF6FF;
+  padding: 5px;
+  text-align: center;
+  border-bottom: 1px solid #C2E4FE;
+}
+.persons-list-table img {
+  border-radius: 5px;
+}
+.persons-list-table button {
+  width: 80px;
+}
+.persons-list-table-controls-container {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.button {
+  backface-visibility: hidden;
+  background-color: #7CC6FE;
+  border-radius: 5px;
+  border-width: 0;
+  cursor: pointer;
+  font-size: 100%;
+  height: 30px;
+  line-height: 1.15;
+  margin: 5px 0 0;
+  outline: none;
+  overflow: hidden;
+  padding: 0 10px;
+  position: relative;
+  text-align: center;
+  width: 150px;
+}
+
+.button:disabled {
+  cursor: default;
+}
+
+.button:hover {
+  opacity: .8;
+}
+
+@media (max-width: 768px) {
+  .persons-list-table thead {
+    display: none;
+  }
+  .persons-list-table,
+  .persons-list-table tbody,
+  .persons-list-table tr,
+  .persons-list-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .persons-list-table tr {
+    margin-bottom: 10px;
+  }
+
+  .persons-list-table tbody tr td {
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .persons-list-table img {
+    width: 25px;
+    height: 25px;
+  }
+  .persons-list-table td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 50%;
+    padding-left: 15px;
+    text-align: left;
+    font-size: 14px;
+  }
+  .persons-list-table-controls-td {
+    text-align: center;
+    padding-left: 0 !important;
+  }
+  .persons-list-table tbody tr {
+    border: 1px solid #C2E4FE;
+  }
+}

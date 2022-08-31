@@ -1,0 +1,36 @@
+<div
+  class="persons-list-container"
+>
+  <h1 class="persons-list-heading">Persons list</h1>
+  <button class="button" (click)="popupService.showAddPersonPopup()">Add person</button>
+  <div class="persons-list-table-wrapper">
+    <table
+      class="persons-list-table"
+      *ngIf="personsListService.personsTableHeaders$ | async as headers"
+    >
+      <thead>
+        <tr>
+          <th *ngFor="let header of headers">
+            {{header}}
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let person of personsListService.persons$ | async">
+        <td [attr.data-label]="headers[0]">{{person.id}}</td>
+        <td [attr.data-label]="headers[1]"><img *ngIf="person.imageUrl" [src]="person.imageUrl" [alt]="person.name"></td>
+        <td [attr.data-label]="headers[2]">{{person.name}}</td>
+        <td [attr.data-label]="headers[3]">{{person.profession}}</td>
+        <td [attr.data-label]="headers[4]">{{person.age}}</td>
+        <td class="persons-list-table-controls-td">
+          <div class="persons-list-table-controls-container">
+            <button class="button" (click)="popupService.showEditPersonPopup(person)">Edit</button>
+            <button class="button" (click)="popupService.showDeletePersonPopup(person.id)">Delete</button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
