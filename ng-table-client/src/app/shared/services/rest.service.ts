@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { PersonIdType, PersonInterface } from "../types/person.interface";
 import { environment } from "../../../environments/environment";
 import { PersonRequestInterface } from "../types/person-request.interface";
+import { PersonsResponseInterface } from "../types/persons-response.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -17,26 +18,26 @@ export class RestService {
       .post<PersonInterface>(fullUrl, payload);
   }
 
-  getPersons(): Observable<PersonInterface[]>{
+  getPersons(): Observable<PersonsResponseInterface>{
     const fullUrl = `${environment.apiUrl}/getPersons`;
     return this.httpClient
-      .get<PersonInterface[]>(fullUrl);
+      .get<PersonsResponseInterface>(fullUrl);
   }
 
-  getPerson(slug: PersonIdType): Observable<PersonInterface>{
-    const fullUrl = `${environment.apiUrl}/getPerson/${slug}`;
+  getPerson(personId: PersonIdType): Observable<PersonInterface>{
+    const fullUrl = `${environment.apiUrl}/getPerson/${personId}`;
     return this.httpClient
       .get<PersonInterface>(fullUrl);
   }
 
-  editPerson(slug:PersonIdType, payload: PersonRequestInterface){
-    const fullUrl = `${environment.apiUrl}/editPerson/${slug}`;
+  editPerson(personId:PersonIdType, person: PersonRequestInterface){
+    const fullUrl = `${environment.apiUrl}/editPerson/${personId}`;
     return this.httpClient
-      .patch(fullUrl, payload);
+      .patch(fullUrl, person);
   }
 
-  deletePerson(slug: PersonIdType){
-    const fullUrl = `${environment.apiUrl}/deletePerson/${slug}`;
+  deletePerson(personId: PersonIdType){
+    const fullUrl = `${environment.apiUrl}/deletePerson/${personId}`;
     return this.httpClient
       .delete(fullUrl);
   }

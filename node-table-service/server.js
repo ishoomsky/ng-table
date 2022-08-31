@@ -10,6 +10,7 @@ app.use(bodyParser.json());
 
 class Storage {
   constructor() {
+    this.headers = [];
     this.data = [];
   }
   initData() {
@@ -108,12 +109,29 @@ class Storage {
     ]
     const minAge = 18;
     const maxAge = 65;
+    const picsumImagesIds = [
+      237,
+      433,
+      577,
+      582,
+      593,
+      659,
+      718,
+      783,
+      790,
+      837,
+      1024,
+      1025,
+      1074,
+      1084
+    ];
 
+    this.headers = ['#', 'Image', 'Name', 'Profession', 'Age'];
     this.data = Array.from(Array(length), (item, index) => {
       return {
         id: index,
         name: `${firstNames[Math.floor(Math.random() * firstNames.length)]} ${lastNames[Math.floor(Math.random() * lastNames.length)]}`,
-        imageUrl: 'https://picsum.photos/id/'+ index +'/20/20',
+        imageUrl: 'https://picsum.photos/id/' + picsumImagesIds[Math.floor(Math.random() * picsumImagesIds.length)] + '/60/60',
         profession: professions[Math.floor(Math.random()* professions.length)],
         age: Math.round(minAge - 0.5 + Math.random() * (maxAge - minAge + 1)),
       };
@@ -123,7 +141,7 @@ class Storage {
     if (typeof person === 'object' && person !== null) {
       const newPerson = {
         ...person,
-        id: Math.floor(Math.random() * 10000)+Date.now(),
+        id: Math.floor(this.data.length + Math.random() * (999 - this.data.length))
       }
       this.data.unshift(newPerson);
       return newPerson;
@@ -133,16 +151,16 @@ class Storage {
   }
 
   getPersons() {
-    return this.data;
+    return {
+      data: this.data,
+      headers: this.headers,
+    };
   }
 
   getPersonById(_personId) {
     let personId = Number(_personId);
     const index = this.data.findIndex((person) => person.id === personId);
-    if (index === -1) {
-      return false;
-    }
-    return this.data[index];
+    return index !== -1;
   }
 
   updatePersonById(_personId, newData){
@@ -151,8 +169,11 @@ class Storage {
     if (index === -1) {
       return false;
     }
-    this.data[index] = newData;
-    return newData;
+    this.data[index] = {
+      ...this.data[index],
+      ...newData
+    };
+    return true;
   }
 
   deletePersonById(_personId) {
@@ -160,8 +181,10 @@ class Storage {
     const index = this.data.findIndex((person) => person.id === personId);
     if (index === -1) {
       return false;
+    } else {
+      this.data.splice(index, 1);
+      return true;
     }
-    return this.data.splice(index, 1);
   }
 }
 
@@ -176,7 +199,7 @@ app.get("/getPersons", (req, res) => {
 
 app.get("/getPerson/:id", (req, res) => {
   const result = storage.getPersonById(req.params.id);
-  if (result) {
+  if (typeof result === 'number') {
     res.send(result);
   } else {
     res.status(500).json({message: "Person with such id doesn't exist"});
@@ -197,23 +220,21 @@ app.patch("/editPerson/:id", (req, res) => {
   const updatedData = req.body;
   const result = storage.updatePersonById(id, updatedData)
   if (result) {
-    res.send(result);
+    res.status(200).json(result);
   } else {
-    res.status(400).json({message: 'Person with such id doesn\'t exist'});
+    res.status(400).json({message: 'Person with such id doesn\'t exist: ' + id});
   }
 });
 
 app.delete("/deletePerson/:id", (req, res) => {
-  const id = req.params.id;
+  const id = Number(req.params.id);
   const result = storage.deletePersonById(id);
   if (result) {
-    res.send({message: `Person ${result[0].name} has been deleted`})
+    res.status(200).json({deletedPerson: id});
   } else {
     res.status(400).json({message: 'Person with such id doesn\'t exist'})
   }
 })
-
-
 
 app.listen(3005, () => {
   console.log("Server listening on port 3005.");
