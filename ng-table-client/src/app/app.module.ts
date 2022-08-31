@@ -4,18 +4,22 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from "@angular/common/http";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RestService } from "./shared/services/rest.service";
-import { TableModule } from "./table/table.module";
+import { PersonsListModule } from "./persons-list/persons-list.module";
+import { PopupModule } from "./popup/popup.module";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    TableModule
+    BrowserAnimationsModule,
+    PersonsListModule,
+    PopupModule
   ],
   providers: [RestService],
   bootstrap: [AppComponent]

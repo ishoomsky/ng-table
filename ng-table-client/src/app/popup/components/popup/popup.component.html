@@ -1,0 +1,118 @@
+<ng-container *ngIf="popupService.popupState$ | async as popupState" @popupFadeIn @popupFadeOut>
+  <div
+    *ngIf="popupState.isShow"
+    class="popup-background"
+    @popupBackgroundFadeIn
+    @popupBackgroundFadeOut
+  >
+  </div>
+  <div *ngIf="popupState.isShow" class="popup-container">
+    <div class="popup" #popupRef>
+      <div class="popup-content-container">
+        <div
+          (click)="this.popupService.hidePopup()"
+          class="popup-close-control">
+          <svg
+            fill="#08090A"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24" width="24px" height="24px">
+            <path d="M 4.7070312 3.2929688 L 3.2929688 4.7070312 L 10.585938 12 L 3.2929688 19.292969 L 4.7070312 20.707031 L 12 13.414062 L 19.292969 20.707031 L 20.707031 19.292969 L 13.414062 12 L 20.707031 4.7070312 L 19.292969 3.2929688 L 12 10.585938 L 4.7070312 3.2929688 z"/>
+          </svg>
+        </div>
+        <ng-container *ngIf="popupState.type === PopupType.add">
+          <ng-template
+            [ngTemplateOutlet]="addPopupRef"
+            [ngTemplateOutletContext]="{ $implicit: popupForm }"
+          >
+          </ng-template>
+        </ng-container>
+        <ng-container *ngIf="popupState.type === PopupType.edit">
+          <ng-template
+            [ngTemplateOutlet]="editPopupRef"
+            [ngTemplateOutletContext]="{ $implicit: popupState, formInstance: popupForm }"
+          >
+          </ng-template>
+        </ng-container>
+        <ng-container *ngIf="popupState.type === PopupType.delete">
+          <ng-template
+            [ngTemplateOutlet]="deletePopupRef"
+            [ngTemplateOutletContext]="{ $implicit: popupState }"
+          >
+          </ng-template>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-template #addPopupRef let-form>
+  <h2>Add new person</h2>
+  <div class="popup-content-inputs-container">
+    <form [formGroup]="form">
+      <label>
+        Name:
+        <input name="name" type="text" [formControl]="form.get('name')">
+      </label>
+      <label>
+        Image url:
+        <input name="imageUrl" type="text" [formControl]="form.get('imageUrl')">
+        <p class="popup-content-tip">for example: <span class="popup-content-img-url">https://picsum.photos/id/593/60/60</span></p>
+      </label>
+      <label>
+        Profession:
+        <input name="profession" type="text" [formControl]="form.get('profession')">
+      </label>
+      <label>
+        Age:
+        <input name="age" type="text" [formControl]="form.get('age')">
+      </label>
+    </form>
+    <span *ngIf="form.invalid && form.touched" class="popup-content-errors">
+      Fields shouldn't be empty
+    </span>
+  </div>
+  <div class="popup-content-controls-container">
+    <button [disabled]="form.invalid || !form.touched" class="button" (click)="addPerson()">Confirm</button>
+    <button class="button" (click)="popupService.hidePopup()">Cancel</button>
+  </div>
+</ng-template>
+
+<ng-template #editPopupRef let-popupState let-form="formInstance">
+  <h2>Edit person {{popupState.name}}</h2>
+  <div class="popup-content-inputs-container">
+    <form [formGroup]="form">
+      <label>
+        Name:
+        <input name="name" type="text" [formControl]="form.get('name')">
+      </label>
+      <label>
+        Image url:
+        <input name="imageUrl" type="text" [formControl]="form.get('imageUrl')">
+        <p class="popup-content-tip">for example: <span class="popup-content-img-url">https://picsum.photos/id/593/60/60</span></p>
+      </label>
+      <label>
+        Profession:
+        <input name="profession" type="text" [formControl]="form.get('profession')">
+      </label>
+      <label>
+        Age:
+        <input name="age" type="text" [formControl]="form.get('age')">
+      </label>
+    </form>
+    <span *ngIf="form.invalid && form.touched" class="popup-content-errors">
+      Fields shouldn't be empty
+    </span>
+  </div>
+  <div class="popup-content-controls-container">
+    <button [disabled]="form.invalid" class="button" (click)="editPerson(popupState.content.id)">Confirm</button>
+    <button class="button" (click)="this.popupService.hidePopup()">Cancel</button>
+  </div>
+</ng-template>
+
+<ng-template #deletePopupRef let-popupState>
+  <h2>Delete person</h2>
+  <p>Are you sure to delete person {{popupState.content.name}}?</p>
+  <div class="popup-content-controls-container">
+    <button class="button" (click)="deletePerson(popupState.content)">Confirm</button>
+    <button class="button" (click)="this.popupService.hidePopup()">Cancel</button>
+  </div>
+</ng-template>
